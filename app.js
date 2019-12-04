@@ -18,7 +18,7 @@ app.engine(
   })
 ); // thats how express-handlebars connected, pug and ejx don`t need it.
 
-app.set("view engine", "hbs"); // set the template engine
+app.set("view engine", "ejs"); // set the template engine
 app.set("views", "src/views"); // path to views file with pug or over extensions.
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,6 +31,7 @@ app.use(shop.router);
 app.use((req, res, next) => {
   res.status(404).render("404", {
     pageTitle: "Not Found Page",
+    path: null
     // layout: false /* for handlebars*/
   });
 });

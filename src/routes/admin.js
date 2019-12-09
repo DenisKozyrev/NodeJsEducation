@@ -3,10 +3,14 @@ const adminController = require("../controllers/admin");
 
 const adminRouter = express.Router();
 
+adminRouter.get("/products", adminController.getProducts);
+
 adminRouter.get("/add-product", adminController.getAddProductsPage);
 
 adminRouter.post("/add-product", adminController.postProduct);
 
-adminRouter.get("/products", adminController.getProducts);
+adminRouter.get("/edit-product/:productId", adminController.getEditProductPage);
+
+adminRouter.post("/edit-product", adminController.postEditedProduct);
 
 module.exports = adminRouter;

@@ -14,32 +14,51 @@ const getProductsFromFile = (cb) => {
   });
 };
 
-module.exports = class Product {
-  constructor(product) {
-    this.title = product.title;
-    this.imageUrl = product.imageUrl;
-    this.price = product.price;
-    this.description = product.description;
-  }
-
-  save() {
-    const id = Math.random().toString();
-    getProductsFromFile((products) => {
-      products.push({ ...this, id });
-      fs.writeFile(productsFilePath, JSON.stringify(products), (err) => {
-        console.log(err);
-      });
+const addProduct = (product) => {
+  const newProduct = {
+    title: product.title,
+    imageUrl: product.imageUrl,
+    price: product.price,
+    description: product.description,
+    id: Math.random().toString()
+  };
+  getProductsFromFile((products) => {
+    products.push(newProduct);
+    fs.writeFile(productsFilePath, JSON.stringify(products), (err) => {
+      console.log(err);
     });
-  }
+  });
+};
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
-  }
-
-  static findById(id, cb) {
-    getProductsFromFile((products) => {
-      const product = products.find((product) => product.id === id);
-      cb(product);
+const editProduct = (updatedProduct) => {
+  getProductsFromFile((products) => {
+    const updatedProducts = products.map((product) => {
+      if (product.id === updatedProduct.id) {
+        return updatedProduct;
+      } else {
+        return product;
+      }
     });
-  }
+    fs.writeFile(productsFilePath, JSON.stringify(updatedProducts), (err) => {
+      console.log(err);
+    });
+  });
+};
+
+const fetchAllProducts = (cb) => {
+  getProductsFromFile(cb);
+};
+
+const findProductById = (id, cb) => {
+  getProductsFromFile((products) => {
+    const product = products.find((product) => product.id === id);
+    cb(product);
+  });
+};
+
+module.exports = {
+  addProduct,
+  editProduct,
+  fetchAllProducts,
+  findProductById
 };

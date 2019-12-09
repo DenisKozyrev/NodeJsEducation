@@ -2,6 +2,7 @@ const path = require("path");
 
 const rootDir = require("../utils/path");
 const Product = require("../models/product");
+const Cart = require("../models/cart");
 
 exports.getIndexPage = (req, res, next) => {
   Product.fetchAll((products) => {
@@ -29,8 +30,8 @@ exports.getProductDetailsPage = (req, res, next) => {
   Product.findById(productId, (product) => {
     res.render("shop/product-details", {
       product,
-      pageTitle: "Product Details",
-      path: `/products/${productId}`
+      pageTitle: `${product.title} Details`,
+      path: "/products"
     });
   });
 };
@@ -40,6 +41,14 @@ exports.getCartPage = (req, res, next) => {
     pageTitle: "Your Cart",
     path: "/cart"
   });
+};
+
+exports.postProductToCart = (req, res, next) => {
+  const productId = req.body.productId;
+  Product.findById(productId, (product) => {
+    Cart.addProductToCart(productId, product.price);
+  });
+  res.redirect("/cart");
 };
 
 exports.getCheckoutPage = (req, res, next) => {

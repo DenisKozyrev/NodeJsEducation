@@ -2,10 +2,10 @@ const fs = require("fs");
 const path = require("path");
 const rootDir = require("../utils/path");
 
-const productsFilePath = path.join(rootDir, "src", "data", "cart.json");
+const cartFilePath = path.join(rootDir, "src", "data", "cart.json");
 
 const addProductToCart = (productId, price) => {
-  fs.readFile(productsFilePath, (err, fileContent) => {
+  fs.readFile(cartFilePath, (err, fileContent) => {
     let cart = { products: [], totalPrice: 0 };
 
     if (!err) {
@@ -36,10 +36,25 @@ const addProductToCart = (productId, price) => {
       };
     }
 
-    fs.writeFile(productsFilePath, JSON.stringify(cart), (err) => {
+    fs.writeFile(cartFilePath, JSON.stringify(cart), (err) => {
       console.log(err);
     });
   });
 };
 
-module.exports = { addProductToCart };
+const deleteProductFromCart = (productId, productPrice) => {
+  fs.readFile(cartFilePath, (err, fileContent) => {
+    if (!err) {
+      const cart = JSON.parse(fileContent);
+      const updatedCart = {
+        products: cart.products.filter((product) => product.id !== productId),
+        totalPrice: cart.totalPrice - Number(productPrice)
+      };
+      fs.writeFile(cartFilePath, JSON.stringify(updatedCart), (err) => {
+        console.log(err);
+      });
+    }
+  });
+};
+
+module.exports = { addProductToCart, deleteProductFromCart };

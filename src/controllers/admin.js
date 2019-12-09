@@ -2,7 +2,8 @@ const {
   addProduct,
   editProduct,
   fetchAllProducts,
-  findProductById
+  findProductById,
+  deleteProduct
 } = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
@@ -26,7 +27,7 @@ exports.getAddProductsPage = (req, res, next) => {
 
 exports.postProduct = (req, res, next) => {
   addProduct(req.body);
-  res.redirect("/");
+  res.redirect("/products");
 };
 
 exports.getEditProductPage = (req, res, next) => {
@@ -50,8 +51,14 @@ exports.getEditProductPage = (req, res, next) => {
   });
 };
 
-exports.postEditedProduct = (req, res, next) => {
+exports.editProduct = (req, res, next) => {
   const product = req.body;
   editProduct(product);
+  res.redirect("/admin/products");
+};
+
+exports.postDeleteProduct = (req, res, next) => {
+  const {id, price} = req.body;
+  deleteProduct(id, price);
   res.redirect("/admin/products");
 };

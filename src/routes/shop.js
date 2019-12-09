@@ -1,20 +1,18 @@
-const path = require("path");
 const express = require("express");
-const rootDir = require("../utils/path");
-const admin = require("./admin");
+const shopController = require("../controllers/shop");
 
-const router = express.Router();
+const shopRouter = express.Router();
 
-router.get("/", (req, res, next) => {
-  // res.sendFile(path.join(rootDir, "src", "views", "shop.html")); // we can send the statis html file
-  res.render(path.join(rootDir, "src", "views", "shop"), {
-    prods: admin.products,
-    pageTitle: "Shop",
-    path: "/",
-    hasProducts: admin.products.length > 0,
-    activeShop: true,
-    productCSS: true
-  }); // or only "shop" we render the view with the pug engine
-});
+shopRouter.get("/", shopController.getIndexPage);
 
-module.exports = { router };
+shopRouter.get("/products", shopController.getProductsPage);
+
+shopRouter.get("/products/:productId", shopController.getProductDetailsPage);
+
+shopRouter.get("/cart", shopController.getCartPage);
+
+shopRouter.get("/checkout", shopController.getCheckoutPage);
+
+shopRouter.get("/orders", shopController.getOrdersPage);
+
+module.exports = shopRouter;

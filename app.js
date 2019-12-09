@@ -3,9 +3,10 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const expressHbs = require("express-handlebars");
 
-const admin = require("./src/routes/admin");
-const shop = require("./src/routes/shop");
+const adminRouter = require("./src/routes/admin");
+const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
+const errorsController = require("./src/controllers/errors");
 
 const app = express();
 
@@ -25,19 +26,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(rootDir, "public")));
 
-app.use("/admin", admin.router); //filtering and adding same path beging
-app.use(shop.router);
+app.use("/admin", adminRouter); //filtering and adding same path beging
+app.use(shopRouter);
 
-app.use((req, res, next) => {
-  res.status(404).render("404", {
-    pageTitle: "Not Found Page",
-    path: null
-    // layout: false /* for handlebars*/
-  });
-});
+app.use(errorsController.getNotFoundPage);
 
 app.listen(3000);
-
 
 // server without express
 // const requestHandler = require("./routes");
@@ -45,4 +39,4 @@ app.listen(3000);
 
 // const server = http.createServer(requestHandler);
 
-// server.listen(3000);  
+// server.listen(3000);

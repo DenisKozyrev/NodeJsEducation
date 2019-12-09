@@ -1,26 +1,12 @@
-const path = require("path");
 const express = require("express");
+const adminController = require("../controllers/admin");
 
-const rootDir = require("../utils/path");
+const adminRouter = express.Router();
 
-const router = express.Router();
+adminRouter.get("/add-product", adminController.getAddProductsPage);
 
-const products = [];
+adminRouter.post("/add-product", adminController.postProduct);
 
-router.get("/add-product", (req, res, next) => {
-  // res.sendFile(path.join(rootDir, "src", "views", "add-product.html")); // we can send the statis html file
-  res.render("add-product", {
-    pageTitle: "Add Product",
-    path: "/admin/add-product",
-    formsCSS: true,
-    productCSS: true,
-    activeAddProduct: true
-  });
-});
+adminRouter.get("/products", adminController.getProducts);
 
-router.post("/add-product", (req, res, next) => {
-  products.push({ title: req.body.title });
-  res.redirect("/");
-});
-
-module.exports = { router, products };
+module.exports = adminRouter;

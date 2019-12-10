@@ -4,22 +4,26 @@ const rootDir = require("../utils/path");
 
 const cartFilePath = path.join(rootDir, "src", "data", "cart.json");
 
-const addProductToCart = (productId, price) => {
+const getCartFromFile = (cb) => {
   fs.readFile(cartFilePath, (err, fileContent) => {
-    let cart = { products: [], totalPrice: 0 };
-
-    if (!err) {
-      cart = JSON.parse(fileContent);
+    if (err) {
+      cb({ products: [], totalPrice: 0 });
+    } else {
+      cb(JSON.parse(fileContent));
     }
+  });
+};
 
+const addProductToCart = (product) => {
+  getCartFromFile((cart) => {
     const existingProductIndex = cart.products.findIndex(
-      (product) => product.id === productId
+      (prod) => prod.id === product.id
     );
-
+    console.log(product);
     if (existingProductIndex === -1) {
       cart = {
-        products: [...cart.products, { id: productId, qty: 1 }],
-        totalPrice: cart.totalPrice + Number(price)
+        products: [...cart.products, { ...product, qty: 1 }],
+        totalPrice: cart.totalPrice + Number(product.price)
       };
     } else {
       const existingUpdatedProduct = {
@@ -32,7 +36,7 @@ const addProductToCart = (productId, price) => {
 
       cart = {
         products: [...updatedProducts],
-        totalPrice: cart.totalPrice + Number(price)
+        totalPrice: cart.totalPrice + Number(product.price)
       };
     }
 
@@ -42,18 +46,19 @@ const addProductToCart = (productId, price) => {
   });
 };
 
-const deleteProductFromCart = (productId, productPrice) => {
-  fs.readFile(cartFilePath, (err, fileContent) => {
-    if (!err) {
-      const cart = JSON.parse(fileContent);
-      const updatedCart = {
-        products: cart.products.filter((product) => product.id !== productId),
-        totalPrice: cart.totalPrice - Number(productPrice)
-      };
-      fs.writeFile(cartFilePath, JSON.stringify(updatedCart), (err) => {
-        console.log(err);
-      });
-    }
+const deleteProductFromCart = (productId) => {
+  getCartFromFile((cart) => {
+    const deletedProduct = cart.products.find(
+      (product) => product.id === productId
+    );
+    const updatedCart = {
+      products: cart.products.filter((product) => product.id !== productId),
+      totalPrice:
+        cart.totalPrice - Number(deletedProduct.price) * deletedProduct.qty 
+    };
+    fs.writeFile(cartFilePath, JSON.stringify(updatedCart), (err) => {
+      console.log(err);
+    });
   });
 };
 

@@ -7,6 +7,7 @@ const adminRouter = require("./src/routes/admin");
 const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
 const errorsController = require("./src/controllers/errors");
+const sqlDatabase = require("./src/utils/sqlDatabase");
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.use("/admin", adminRouter); //filtering and adding same path beging
 app.use(shopRouter);
 
 app.use(errorsController.getNotFoundPage);
+
+sqlDatabase.execute("SELECT * FROM node_complete.products").then();
 
 app.listen(3000);
 

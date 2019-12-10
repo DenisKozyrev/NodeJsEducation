@@ -23,6 +23,7 @@ const addProduct = (product) => {
     description: product.description,
     id: Math.random().toString()
   };
+  
   getProductsFromFile((products) => {
     products.push(newProduct);
     fs.writeFile(productsFilePath, JSON.stringify(products), (err) => {

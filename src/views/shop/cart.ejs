@@ -5,6 +5,19 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main>
-      <h1>Cart</h1>
+      <% if(products) { %>
+        <% products.forEach(product => { %>
+          <ul>
+            <li>
+              <h2><%= product.title%></h3>
+              <h3>$<%= product.price%></h3>
+              <p><%= product.description%></p>
+              <p><%= product.qty%></p>
+            </li>
+          </ul>
+        <% }) %>
+      <% } else { %>
+        <h1>Products is not found!</h1>
+      <% } %>
     </main>
     <%- include('../includes/end.ejs') %>

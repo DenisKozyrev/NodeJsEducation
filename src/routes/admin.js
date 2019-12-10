@@ -7,7 +7,7 @@ adminRouter.get("/products", adminController.getProductsHandler);
 
 adminRouter.get("/add-product", adminController.getAddProductsPageHandler);
 
-adminRouter.post("/add-product", adminController.postProductHandler);
+adminRouter.post("/add-product", adminController.addProductHandler);
 
 adminRouter.get("/edit-product/:productId", adminController.getEditProductPageHandler);
 

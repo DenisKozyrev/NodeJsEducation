@@ -25,7 +25,7 @@ exports.getAddProductsPageHandler = (req, res, next) => {
   });
 };
 
-exports.postProductHandler = (req, res, next) => {
+exports.addProductHandler = (req, res, next) => {
   addProduct(req.body);
   res.redirect("/products");
 };

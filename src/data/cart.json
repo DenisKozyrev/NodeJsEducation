@@ -1,1 +1,1 @@
-{"products":[],"totalPrice": 0}
+{"products":[{"title":"First Product","imageUrl":"","price":"123","description":"First Product Description","id":"0.13927526559000536","qty":2},{"title":"Second Product","imageUrl":"","price":"145","description":"Second Product Description","id":"0.01246646574692245","qty":2},{"title":"Denis Product","imageUrl":"","price":"200","description":"Denis Product Description","id":"0.559440232430346","qty":1}],"totalPrice":736}

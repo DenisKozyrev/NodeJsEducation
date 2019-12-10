@@ -14,12 +14,11 @@ const getCartFromFile = (cb) => {
   });
 };
 
-const addProductToCart = (product) => {
+const addProductToCart = (product, cb) => {
   getCartFromFile((cart) => {
     const existingProductIndex = cart.products.findIndex(
       (prod) => prod.id === product.id
     );
-    console.log(product);
     if (existingProductIndex === -1) {
       cart = {
         products: [...cart.products, { ...product, qty: 1 }],
@@ -41,7 +40,11 @@ const addProductToCart = (product) => {
     }
 
     fs.writeFile(cartFilePath, JSON.stringify(cart), (err) => {
-      console.log(err);
+      if (!err) {
+        cb();
+      } else {
+        console.log(err);
+      }
     });
   });
 };
@@ -54,7 +57,7 @@ const deleteProductFromCart = (productId) => {
     const updatedCart = {
       products: cart.products.filter((product) => product.id !== productId),
       totalPrice:
-        cart.totalPrice - Number(deletedProduct.price) * deletedProduct.qty 
+        cart.totalPrice - Number(deletedProduct.price) * deletedProduct.qty
     };
     fs.writeFile(cartFilePath, JSON.stringify(updatedCart), (err) => {
       console.log(err);
@@ -62,4 +65,4 @@ const deleteProductFromCart = (productId) => {
   });
 };
 
-module.exports = { addProductToCart, deleteProductFromCart };
+module.exports = { getCartFromFile, addProductToCart, deleteProductFromCart };

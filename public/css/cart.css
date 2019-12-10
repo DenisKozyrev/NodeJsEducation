@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product_list_item {
+  list-style-type: none;
+  background: #c8c8c8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}

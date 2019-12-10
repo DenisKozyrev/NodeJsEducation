@@ -13,6 +13,8 @@ shopRouter.get("/cart", shopController.getCartPageHandler);
 
 shopRouter.post("/cart", shopController.addProductToCartHandler);
 
+shopRouter.post("/cart/delete-item", shopController.deleteCartItemHandler)
+
 shopRouter.get("/checkout", shopController.getCheckoutPageHandler);
 
 shopRouter.get("/orders", shopController.getOrdersPageHandler);

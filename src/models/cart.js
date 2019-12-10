@@ -49,18 +49,27 @@ const addProductToCart = (product, cb) => {
   });
 };
 
-const deleteProductFromCart = (productId) => {
+const deleteProductFromCart = (productId, cb) => {
   getCartFromFile((cart) => {
     const deletedProduct = cart.products.find(
       (product) => product.id === productId
     );
+
+    if (!deletedProduct) {
+      return;
+    }
+
     const updatedCart = {
       products: cart.products.filter((product) => product.id !== productId),
       totalPrice:
         cart.totalPrice - Number(deletedProduct.price) * deletedProduct.qty
     };
     fs.writeFile(cartFilePath, JSON.stringify(updatedCart), (err) => {
-      console.log(err);
+      if (!err) {
+        cb();
+      } else {
+        console.log(err);
+      }
     });
   });
 };

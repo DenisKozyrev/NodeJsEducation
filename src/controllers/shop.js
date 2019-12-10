@@ -1,6 +1,10 @@
 const { fetchAllProducts, findProductById } = require("../models/product");
 
-const { getCartFromFile, addProductToCart } = require("../models/cart");
+const {
+  getCartFromFile,
+  addProductToCart,
+  deleteProductFromCart
+} = require("../models/cart");
 
 exports.getIndexPageHandler = (req, res, next) => {
   fetchAllProducts((products) => {
@@ -49,6 +53,14 @@ exports.addProductToCartHandler = (req, res, next) => {
   const productId = req.body.productId;
   findProductById(productId, (product) => {
     addProductToCart(product, () => res.redirect("/cart"));
+  });
+};
+
+exports.deleteCartItemHandler = (req, res, next) => {
+  const { productId } = req.body;
+  console.log(productId)
+  deleteProductFromCart(productId, () => {
+    res.redirect("/cart");
   });
 };
 

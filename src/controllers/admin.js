@@ -1,10 +1,4 @@
-const {
-  addProduct,
-  editProduct,
-  fetchAllProducts,
-  findProductById,
-   deleteProduct
-} = require("../models/product");
+const Product = require("../models/product");
 
 exports.getProductsHandler = (req, res, next) => {
   fetchAllProducts((products) => {
@@ -26,8 +20,14 @@ exports.getAddProductsPageHandler = (req, res, next) => {
 };
 
 exports.addProductHandler = (req, res, next) => {
-  addProduct(req.body);
-  res.redirect("/products");
+  const { title, price, description, imageUrl } = req.body;
+  const product = new Product(null, title, price, description, imageUrl);
+  product
+    .addProduct()
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getEditProductPageHandler = (req, res, next) => {

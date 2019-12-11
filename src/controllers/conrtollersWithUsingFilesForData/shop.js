@@ -1,4 +1,4 @@
-const Product = require("../models/product");
+const { fetchAllProducts, findProductById } = require("../models/product");
 
 const {
   getCartFromFile,
@@ -7,49 +7,35 @@ const {
 } = require("../models/cart");
 
 exports.getIndexPageHandler = (req, res, next) => {
-  Product.fetchAllProducts()
-    .then(([productRows, tableData]) => {
-      res.render("shop/index", {
-        prods: productRows,
-        pageTitle: "Shop",
-        path: "/"
-      });
-    })
-    .catch((err) => {
-      throw new Error(`${err}`);
+  fetchAllProducts((products) => {
+    res.render("shop/index", {
+      prods: products,
+      pageTitle: "Shop",
+      path: "/"
     });
+  });
 };
 
 exports.getProductsPageHandler = (req, res, next) => {
-  Product.fetchAllProducts()
-    .then(([productRows, tableData]) => {
-      console.log(productRows);
-      res.render("shop/products-list", {
-        prods: productRows,
-        pageTitle: "All products",
-        path: "/products"
-      });
-    })
-    .catch((err) => {
-      res.write(`<h1>${err.message}</h1>`);
-      res.end();
+  fetchAllProducts((products) => {
+    res.render("shop/products-list", {
+      prods: products,
+      pageTitle: "All products",
+      path: "/products"
     });
+  });
+  // or res.sendFile(path.join(rootDir, "src", "views", "shop.html")); // we can send the statis html file or only "shop" we render the view with the pug engine
 };
 
 exports.getProductDetailsPageHandler = (req, res, next) => {
   const productId = req.params.productId;
-  Product.findProductById(productId)
-    .then(([product]) => {
-      res.render("shop/product-details", {
-        product: product[0],
-        pageTitle: `${product[0].title} Details`,
-        path: "/products"
-      });
-    })
-    .catch((err) => {
-      res.write(`<h1>${err.message}</h1>`);
-      res.end();
+  findProductById(productId, (product) => {
+    res.render("shop/product-details", {
+      product,
+      pageTitle: `${product.title} Details`,
+      path: "/products"
     });
+  });
 };
 
 exports.getCartPageHandler = (req, res, next) => {
@@ -72,7 +58,7 @@ exports.addProductToCartHandler = (req, res, next) => {
 
 exports.deleteCartItemHandler = (req, res, next) => {
   const { productId } = req.body;
-  console.log(productId);
+  console.log(productId)
   deleteProductFromCart(productId, () => {
     res.redirect("/cart");
   });

@@ -21,12 +21,9 @@ exports.getAddProductsPageHandler = (req, res, next) => {
 
 exports.addProductHandler = (req, res, next) => {
   const { title, price, description, imageUrl } = req.body;
-  Product.create({
-    title,
-    price,
-    description,
-    imageUrl
-  })
+  const product = new Product(null, title, price, description, imageUrl);
+  product
+    .addProduct()
     .then(() => {
       res.redirect("/products");
     })

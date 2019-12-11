@@ -34,7 +34,7 @@ form {
 
 .main-header__nav {
   height: 100%;
-  display: none;
+  display: flex;
   align-items: center;
 }
 

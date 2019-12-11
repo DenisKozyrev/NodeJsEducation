@@ -7,27 +7,32 @@ const {
 } = require("../models/cart");
 
 exports.getIndexPageHandler = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
+  Product.fetchAllProducts()
+    .then(([productRows, tableData]) => {
       res.render("shop/index", {
-        prods: products,
+        prods: productRows,
         pageTitle: "Shop",
         path: "/"
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      throw new Error(`${err}`);
+    });
 };
 
 exports.getProductsPageHandler = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
+  Product.fetchAllProducts()
+    .then(([productRows, tableData]) => {
       res.render("shop/products-list", {
-        prods: products,
+        prods: productRows,
         pageTitle: "All products",
         path: "/products"
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.write(`<h1>${err.message}</h1>`);
+      res.end();
+    });
 };
 
 exports.getProductDetailsPageHandler = (req, res, next) => {

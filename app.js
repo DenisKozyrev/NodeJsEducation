@@ -1,8 +1,9 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-const expressHbs = require("express-handlebars");
+// const expressHbs = require("express-handlebars");
 
+const sequelise = require("./src/utils/sqlDatabase");
 const adminRouter = require("./src/routes/admin");
 const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
@@ -10,14 +11,14 @@ const errorsController = require("./src/controllers/errors");
 
 const app = express();
 
-app.engine(
-  "hbs",
-  expressHbs({
-    layoutsDir: "src/views/layouts/",
-    defaultLayout: "main-layout",
-    extname: "hbs"
-  })
-); // thats how express-handlebars connected, pug and ejx don`t need it.
+// app.engine(
+//   "hbs",
+//   expressHbs({
+//     layoutsDir: "src/views/layouts/",
+//     defaultLayout: "main-layout",
+//     extname: "hbs"
+//   })
+// ); // thats how express-handlebars connected, pug and ejx don`t need it.
 
 app.set("view engine", "ejs"); // set the template engine
 app.set("views", "src/views"); // path to views file with pug or over extensions.
@@ -31,7 +32,12 @@ app.use(shopRouter);
 
 app.use(errorsController.getNotFoundPage);
 
-app.listen(3000);
+sequelise
+  .sync()
+  .then(() => {
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
 
 // server without express
 // const requestHandler = require("./routes");

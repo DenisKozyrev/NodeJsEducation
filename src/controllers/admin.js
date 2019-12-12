@@ -1,18 +1,23 @@
 const Product = require("../models/product");
 
 exports.getProductsHandler = (req, res, next) => {
-  fetchAllProducts((products) => {
-    res.render("admin/products", {
-      prods: products,
-      pageTitle: "Admin Products",
-      path: "/admin/products"
+  Product.findAll()
+    .then((products) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products"
+      });
+    })
+    .catch((err) => {
+      res.write(`<h1>${err.message}</h1>`);
+      res.end();
     });
-  });
 };
 
 exports.getAddProductsPageHandler = (req, res, next) => {
   // res.sendFile(path.join(rootDir, "src", "views", "add-product.html")); // we can send the statis html file
-  res.render("admin/edit-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false
@@ -21,6 +26,7 @@ exports.getAddProductsPageHandler = (req, res, next) => {
 
 exports.addProductHandler = (req, res, next) => {
   const { title, price, description, imageUrl } = req.body;
+
   Product.create({
     title,
     price,
@@ -30,7 +36,10 @@ exports.addProductHandler = (req, res, next) => {
     .then(() => {
       res.redirect("/products");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.write(`<h1>${err.message}</h1>`);
+      res.end();
+    });
 };
 
 exports.getEditProductPageHandler = (req, res, next) => {
@@ -41,27 +50,36 @@ exports.getEditProductPageHandler = (req, res, next) => {
 
   const productId = req.params.productId;
 
-  findProductById(productId, (product) => {
+  Product.findOne({ where: { id: productId } }).then(product => {
     if (!product) {
       res.redirect("/");
     }
-    res.render("admin/edit-product", {
+    res.render("admin/add-product", {
       pageTitle: "Edit Product",
       path: "/admin/edit-product",
       editing: editMode,
       product: product
     });
-  });
+  }).catch(err => {
+    res.write(`<h1>${err.message}</h1>`);
+    res.end();
+  })
 };
 
 exports.editProductHandler = (req, res, next) => {
-  const product = req.body;
-  editProduct(product);
-  res.redirect("/admin/products");
+  const { title, price, description, imageUrl, id } = req.body;
+
+  Product.update({ title, price, description, imageUrl }, { where: { id } }).then(() => {
+    res.redirect("/admin/products");
+  }).catch(err => {
+    res.write(`<h1>${err.message}</h1>`);
+    res.end();
+  })
 };
 
 exports.deleteProductHandler = (req, res, next) => {
   const { id, price } = req.body;
-  deleteProduct(id, price);
-  res.redirect("/admin/products");
+  Product.destroy({ where: { id } }).then(() => {
+    res.redirect("/admin/products");
+  })
 };

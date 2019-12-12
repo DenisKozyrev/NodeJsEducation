@@ -3,7 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 // const expressHbs = require("express-handlebars");
 
-const sequelise = require("./src/utils/sqlDatabase");
+const mySequelise = require("./src/utils/sqlDatabase");
 const adminRouter = require("./src/routes/admin");
 const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
@@ -32,17 +32,9 @@ app.use(shopRouter);
 
 app.use(errorsController.getNotFoundPage);
 
-sequelise
+mySequelise
   .sync()
   .then(() => {
     app.listen(3000);
   })
   .catch((err) => console.log(err));
-
-// server without express
-// const requestHandler = require("./routes");
-// const http = require("http");
-
-// const server = http.createServer(requestHandler);
-
-// server.listen(3000);

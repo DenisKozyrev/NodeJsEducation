@@ -7,15 +7,10 @@ const {
 } = require("../models/cart");
 
 exports.getIndexPageHandler = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
-      res.render("shop/index", {
-        prods: products,
-        pageTitle: "Shop",
-        path: "/"
-      });
-    })
-    .catch((err) => console.log(err));
+  res.render("shop/index", {
+    pageTitle: "Shop",
+    path: "/"
+  });
 };
 
 exports.getProductsPageHandler = (req, res, next) => {
@@ -27,19 +22,21 @@ exports.getProductsPageHandler = (req, res, next) => {
         path: "/products"
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.write(`<h1>${err.message}</h1>`);
+      res.end();
+    });
 };
 
 exports.getProductDetailsPageHandler = (req, res, next) => {
   const productId = req.params.productId;
-  Product.findProductById(productId)
-    .then(([product]) => {
-      res.render("shop/product-details", {
-        product: product[0],
-        pageTitle: `${product[0].title} Details`,
-        path: "/products"
-      });
-    })
+  Product.findOne({ where: { id: productId } }).then(product => {
+    res.render("shop/product-details", {
+      product,
+      pageTitle: `${product.title} Details`,
+      path: "/products"
+    });
+  })
     .catch((err) => {
       res.write(`<h1>${err.message}</h1>`);
       res.end();
@@ -66,7 +63,6 @@ exports.addProductToCartHandler = (req, res, next) => {
 
 exports.deleteCartItemHandler = (req, res, next) => {
   const { productId } = req.body;
-  console.log(productId);
   deleteProductFromCart(productId, () => {
     res.redirect("/cart");
   });

@@ -3,11 +3,14 @@ const path = require("path");
 const bodyParser = require("body-parser");
 // const expressHbs = require("express-handlebars");
 
-const mySequelise = require("./src/utils/sqlDatabase");
 const adminRouter = require("./src/routes/admin");
 const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
 const errorsController = require("./src/controllers/errors");
+
+const nodeCompleteDB = require("./src/utils/sqlDatabase");
+const Product = require("./src/models/product");
+const User = require("./src/models/user");
 
 const app = express();
 
@@ -32,9 +35,14 @@ app.use(shopRouter);
 
 app.use(errorsController.getNotFoundPage);
 
-mySequelise
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product)
+
+
+nodeCompleteDB
+  // .sync({ force: true })
   .sync()
   .then(() => {
     app.listen(3000);
   })
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));

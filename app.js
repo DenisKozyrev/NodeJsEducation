@@ -16,15 +16,6 @@ const CartItem = require("./src/models/cartItem");
 
 const app = express();
 
-// app.engine(
-//   "hbs",
-//   expressHbs({
-//     layoutsDir: "src/views/layouts/",
-//     defaultLayout: "main-layout",
-//     extname: "hbs"
-//   })
-// ); // thats how express-handlebars connected, pug and ejx don`t need it.
-
 app.set("view engine", "ejs"); // set the template engine
 app.set("views", "src/views"); // path to views file with pug or over extensions.
 
@@ -48,14 +39,14 @@ app.use(errorsController.getNotFoundPage);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+// Cart.belongsTo(User); //optional, we can set only one relation User.hasOne(Cart);
 User.hasOne(Cart);
-Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 nodeCompleteDB
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then(() => {
     return User.findOne({ where: { id: 1 } });
   })
@@ -66,7 +57,9 @@ nodeCompleteDB
     return user;
   })
   .then(user => {
-    // console.log(user);
+    return user.createCart();
+  })
+  .then(() => {
     app.listen(3000);
   })
   .catch(err => console.log(err));

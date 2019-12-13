@@ -6,11 +6,11 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main class="wrapper">
-      <% if(products) { %>
+      <% if(products.length) { %>
         <% products.forEach(product => { %>
           <ul>
             <li class="product_list_item">
-              <h2><%= product.title%> (<%= product.qty%>)</h3>
+              <h2><%= product.title%> (<%= product.cartItem.quantity%>)</h3>
               <h3>$<%= product.price%></h3>
               <p><%= product.description%></p>
                 <form action="/cart/delete-item" method="POST">

@@ -98,7 +98,6 @@ exports.addProductToCartHandler = (req, res, next) => {
 exports.deleteCartItemHandler = (req, res, next) => {
   const { productId } = req.body;
   let fetchedCart;
-
   req.user
     .getCart()
     .then(cart => {
@@ -106,7 +105,6 @@ exports.deleteCartItemHandler = (req, res, next) => {
       return cart.getProducts({ where: { id: productId } });
     })
     .then(products => {
-      console.log(products[0]);
       return products[0].cartItem.destroy();
     })
     .then(() => {
@@ -115,10 +113,43 @@ exports.deleteCartItemHandler = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.getCheckoutPageHandler = (req, res, next) => {
-  res.render("shop/checkout", { pageTitle: "Checkout", path: "/checkout" });
+exports.createOrderHandler = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then(cart => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then(products => {
+      return req.user
+        .createOrder()
+        .then(order => {
+          return order.addProducts(
+            products.map(product => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch(err => console.log(err));
+    })
+    .then(() => {
+      fetchedCart.setProducts(null);
+      res.redirect("/orders");
+    })
+    .catch(err => console.log(err));
 };
 
 exports.getOrdersPageHandler = (req, res, next) => {
-  res.render("shop/orders", { pageTitle: "Orders", path: "/orders" });
+  req.user
+    .getOrders({ include: "products" })
+    .then(orders => {
+      res.render("shop/orders", {
+        pageTitle: "Orders",
+        path: "/orders",
+        orders
+      });
+    })
+    .catch(err => console.log(err));
 };

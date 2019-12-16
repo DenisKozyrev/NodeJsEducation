@@ -13,6 +13,8 @@ const Product = require("./src/models/product");
 const User = require("./src/models/user");
 const Cart = require("./src/models/cart");
 const CartItem = require("./src/models/cartItem");
+const Order = require("./src/models/order");
+const OrderItem = require("./src/models/orderItem");
 
 const app = express();
 
@@ -25,7 +27,6 @@ app.use(express.static(path.join(rootDir, "public")));
 app.use((req, res, next) => {
   User.findOne({ where: { id: 1 } })
     .then(user => {
-      console.log(user);
       req.user = user;
       next();
     })
@@ -38,13 +39,14 @@ app.use(errorsController.getNotFoundPage);
 // Relations
 User.hasMany(Product, { constraints: true, onDelete: "CASCADE" });
 User.hasOne(Cart);
-// Cart.belongsTo(User); //optional, we can set only one relation User.hasOne(Cart);
+User.hasMany(Order, { constraints: true, onDelete: "CASCADE" });
 Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+Order.belongsToMany(Product, { through: OrderItem });
 
 // DataBase Sync
 nodeCompleteDB
-  // .sync({ force: true })
+  //.sync({ force: true })
   .sync()
   .then(() => {
     return User.findOne({ where: { id: 1 } });

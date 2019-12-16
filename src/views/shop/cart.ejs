@@ -3,25 +3,32 @@
 </head>
 
 <body>
-    <%- include('../includes/navigation.ejs') %>
+  <%- include('../includes/navigation.ejs') %>
 
-    <main class="wrapper">
-      <% if(products.length) { %>
-        <% products.forEach(product => { %>
-          <ul>
-            <li class="product_list_item">
-              <h2><%= product.title%> (<%= product.cartItem.quantity%>)</h3>
-              <h3>$<%= product.price%></h3>
-              <p><%= product.description%></p>
-                <form action="/cart/delete-item" method="POST">
-                  <input type="hidden" name="productId" value="<%= product.id%>">
-                  <button class="btn">Delete from Cart</button>
-                </form>
-            </li>
-          </ul>
-        <% }) %>
-      <% } else { %>
-        <h1>Products is not found!</h1>
-      <% } %>
-    </main>
-    <%- include('../includes/end.ejs') %>
+  <main class="wrapper">
+    <% if(products.length) { %>
+    <% products.forEach(product => { %>
+    <ul>
+      <li class="product_list_item">
+        <h2><%= product.title%> (<%= product.cartItem.quantity%>)</h3>
+          <h3>$<%= product.price%></h3>
+          <p><%= product.description%></p>
+          <form action="/cart/delete-item" method="POST">
+            <input type="hidden" name="productId" value="<%= product.id%>">
+            <button type="submit" class="btn">Delete from Cart</button>
+          </form>
+      </li>
+    </ul>
+    <% }) %>
+    <% } else { %>
+    <h1>Products is not found!</h1>
+    <% } %>
+  </main>
+  <% if(products.length) { %>
+  <div class="checkout-form">
+    <form action="/create-order" method="POST">
+      <button type="submit" class="btn">Order Now</button>
+    </form>
+  </div>
+  <% } %>
+  <%- include('../includes/end.ejs') %>

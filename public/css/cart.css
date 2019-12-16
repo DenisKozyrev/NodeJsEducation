@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .product_list_item {
@@ -11,4 +11,10 @@
   flex-direction: column;
   align-items: center;
   padding: 10px;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

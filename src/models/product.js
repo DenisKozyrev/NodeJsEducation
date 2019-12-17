@@ -1,8 +1,7 @@
 const mongodb = require("mongodb");
 const getDb = require("../utils/mongoDatabase").getDb;
 module.exports = class Product {
-  constructor(id, title, price, description, imageUrl) {
-    this.id = id;
+  constructor(title, price, description, imageUrl) {
     this.title = title;
     this.price = price;
     this.description = description;
@@ -29,7 +28,6 @@ module.exports = class Product {
       .find({ _id: new mongodb.ObjectId(productId) })
       .next()
       .then(product => {
-        console.log(product, "product");
         return product;
       })
       .catch(err => console.log(err));
@@ -40,6 +38,24 @@ module.exports = class Product {
     return db
       .collection("products")
       .insertOne(this)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
+  static update(product) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .updateOne({ _id: new mongodb.ObjectId(product.id) }, { $set: product })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
+  static delete(productId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .deleteOne({ _id: new mongodb.ObjectId(productId) })
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }

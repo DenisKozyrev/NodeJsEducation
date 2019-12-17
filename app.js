@@ -3,7 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 
 const adminRouter = require("./src/routes/admin");
-// const shopRouter = require("./src/routes/shop");
+const shopRouter = require("./src/routes/shop");
 // const errorsController = require("./src/controllers/errors");
 const rootDir = require("./src/utils/path");
 
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, "public")));
 
 app.use("/admin", adminRouter); //filtering and adding same path beging
-// app.use(shopRouter);
+app.use(shopRouter);
 // app.use(errorsController.getNotFoundPage);
 
 // Relations

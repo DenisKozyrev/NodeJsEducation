@@ -27,7 +27,7 @@ exports.getAddProductsPageHandler = (req, res, next) => {
 
 exports.addProductHandler = (req, res, next) => {
   const { title, price, description, imageUrl } = req.body;
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(null, title, price, description, imageUrl);
   product
     .addProduct()
     .then(() => {

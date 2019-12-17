@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
-const nodeCompleteDB = require("../utils/mongoDatabase");
+const nodeCompleteDB = require("../utils/sqlDatabase");
 
-const CartItem = nodeCompleteDB.define("cartItem", {
+const OrderItem = nodeCompleteDB.define("orderItem", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -11,4 +11,4 @@ const CartItem = nodeCompleteDB.define("cartItem", {
   quantity: Sequelize.INTEGER
 });
 
-module.exports = CartItem;
+module.exports = OrderItem;

@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const nodeCompleteDB = require("../utils/mongoDatabase");
+const nodeCompleteDB = require("../utils/sqlDatabase");
 
 const Order = nodeCompleteDB.define("order", {
   id: {

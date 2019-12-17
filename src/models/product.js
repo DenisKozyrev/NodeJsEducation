@@ -1,27 +1,19 @@
-const Sequelize = require("sequelize");
+const getDb = require("../utils/mongoDatabase").getDb;
+module.exports = class Product {
+  constructor(id, title, price, description, imageUrl) {
+    this.id = id;
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
+  }
 
-const nodeCompleteDB = require("../utils/sqlDatabase");
-
-const Product = nodeCompleteDB.define("product", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  title: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
-    allowNull: false
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  imageUrl: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-});
-
-module.exports = Product;
+  addProduct() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .insertOne(this)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+};

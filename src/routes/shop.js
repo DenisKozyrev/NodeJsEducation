@@ -14,7 +14,7 @@ shopRouter.get(
 
 // shopRouter.get("/cart", shopController.getCartPageHandler);
 
-// shopRouter.post("/cart", shopController.addProductToCartHandler);
+shopRouter.post("/cart", shopController.addProductToCartHandler);
 
 // shopRouter.post("/cart/delete-item", shopController.deleteCartItemHandler);
 

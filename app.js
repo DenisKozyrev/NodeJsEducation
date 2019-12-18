@@ -8,7 +8,6 @@ const shopRouter = require("./src/routes/shop");
 const rootDir = require("./src/utils/path");
 
 const mongoConnect = require("./src/utils/mongoDatabase").mongoConnect;
-const getDb = require("./src/utils/mongoDatabase").getDb;
 
 const User = require("./src/models/user");
 
@@ -18,12 +17,14 @@ app.set("view engine", "ejs"); // set the template engine
 app.set("views", "src/views"); // path to views file with pug or over extensions.
 
 app.use((req, res, next) => {
-  User.find("5df8f09c94bf8b2a1909b568")
+  User.find("5dfa44d00789a337b87a1ec3")
     .then(user => {
-      req.user = user;
+      if (user) {
+        req.user = new User(user._id, user.name, user.email, user.cart);
+      }
+      next();
     })
     .catch(err => console.log(err));
-  next();
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,9 +38,11 @@ app.use(shopRouter);
 
 //Connection
 mongoConnect(() => {
-  User.find("5df8f09c94bf8b2a1909b568").then(user => {
+  User.find("5dfa44d00789a337b87a1ec3").then(user => {
     if (!user) {
-      const user = new User("Denis", "test@test.com");
+      const user = new User(null, "Denis", "test@test.com", {
+        items: []
+      });
       user
         .add()
         .then(() => {

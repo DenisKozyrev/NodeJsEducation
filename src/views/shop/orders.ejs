@@ -7,11 +7,11 @@
     <% if(orders.length) { %>
     <ul>
       <% orders.forEach(order => { %>
-      <li># <%=order.id%></li>
+      <li># <%=order._id%></li>
       <ul>
-        <% order.products.forEach(product => { %>
+        <% order.items.forEach(product => { %>
         <li><%=product.title%></li>
-        <li><%=product.orderItem.quantity%></li>
+        <li><%=product.quantity%></li>
         <% }) %>
       </ul>
       <% }) %>

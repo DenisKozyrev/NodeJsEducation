@@ -12,7 +12,7 @@ shopRouter.get(
   shopController.getProductDetailsPageHandler
 );
 
-// shopRouter.get("/cart", shopController.getCartPageHandler);
+shopRouter.get("/cart", shopController.getCartPageHandler);
 
 shopRouter.post("/cart", shopController.addProductToCartHandler);
 

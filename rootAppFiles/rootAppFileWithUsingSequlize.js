@@ -44,7 +44,7 @@ Cart.belongsToMany(Product, { through: CartItem });
 Order.belongsTo(User);
 Order.belongsToMany(Product, { through: OrderItem });
 
-// DataBase Sync
+// DataBase connect with sequalizze
 nodeCompleteDB
   //.sync({ force: true })
   .sync()

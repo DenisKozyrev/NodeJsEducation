@@ -14,9 +14,8 @@ exports.getIndexPageHandler = (req, res, next) => {
 };
 
 exports.getProductsPageHandler = (req, res, next) => {
-  Product.find()
+  Product.fetchAll()
     .then(products => {
-      console.log(products);
       res.render("shop/products-list", {
         prods: products,
         pageTitle: "All products",
